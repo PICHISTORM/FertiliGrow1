@@ -21,8 +21,6 @@ def read_data(file_path):
         messagebox.showerror("Error", f"No se pudo leer el archivo: {e}")
         return pd.DataFrame()
 
-
-
 def plot():
     global archivo_seleccionado
     if archivo_seleccionado:
@@ -71,8 +69,6 @@ def plot():
         messagebox.showerror("Error", "No se ha seleccionado ningún archivo.")
 
 def interpretar_fertility(P_i_values):
-    # Aquí defines tu función para interpretar los valores de fertilidad
-    # Por ejemplo, podrías definir una función simple como esta:
     if P_i_values[-1] > 10:
         return "La fertilidad es alta."
     elif P_i_values[-1] > 5:
@@ -81,9 +77,6 @@ def interpretar_fertility(P_i_values):
         return "La fertilidad es baja."
     
 #quitar prueba
-
-
-
 
 # Función para seleccionar el archivo
 def miFuncion():
@@ -123,7 +116,6 @@ btnA.place(x=5, y=70, width=100, height=30)
 
 lbl_A = Label(app, text="INPUT(DATOS.TXT)", fg="red")
 lbl_A.place(x=5, y=40, width=100, height=30)
-
 
 # Label de las instrucciones
 texto_instrucciones = """
