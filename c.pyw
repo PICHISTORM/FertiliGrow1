@@ -106,7 +106,7 @@ btnmodel.place(x=330,y=380,width=120,height=30)
 btninfo = Button(app, text="MORE INFO", command=miFuncion3,fg="red", bg="white")
 btninfo.place(x=700,y=10,width=120,height=30)
 
-
+#XD LOL LMAO ROFLMAO SIGMA SKIBIDI GYATT RIZZLER TOILET
 
 
 app.mainloop()  # refresh de la app
