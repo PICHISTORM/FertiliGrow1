@@ -25,6 +25,8 @@ def plot():
     global archivo_seleccionado
     if archivo_seleccionado:
         data = read_data(archivo_seleccionado)
+        #print 1
+        print("el archivo fue detectado con exito")
         if not data.empty:
             if 'time' in data.columns and 'P_i' in data.columns and 'a1' in data.columns and 'a2' in data.columns and 'a3' in data.columns:
                 # Leer parámetros a1, a2, a3 y tiempo
@@ -32,7 +34,8 @@ def plot():
                 a2 = data['a2'][0]
                 a3 = data['a3'][0]
                 t_final = max(data['time'])
-                dt = 0.1  # Paso de tiempo
+                print(t_final)
+                dt = 0.1
                 n_steps = int(t_final / dt)
                 time = np.linspace(0, t_final, n_steps)
 
@@ -40,15 +43,21 @@ def plot():
                 def modelo(P, a1, a2, a3):
                     dPdt = a1 - a2 * P - a3 * P**2
                     return dPdt
+                #print 2
+                print("se retorna Ddpdt")
 
                 # Condición inicial
                 P0 = data['P_i'][0]
                 P_values = np.zeros(n_steps)
                 P_values[0] = P0
-
+               #print 3
+                print("se establecen los valores iniciales")
+            
                 # Resolver la ecuación diferencial usando el método de Euler
                 for i in range(1, n_steps):
                     P_values[i] = P_values[i-1] + modelo(P_values[i-1], a1, a2, a3) * dt
+                  #print 4
+                    print("se usa el metodo de euler")
 
                 # Graficar la solución
                 plt.plot(time, P_values, label='Fertility (P_i) over Time')
@@ -56,8 +65,11 @@ def plot():
                 plt.ylabel('Fertility (P_i)')
                 plt.legend()
                 plt.show()
-
+                    #print 5
+                print("se grafico la solucion")
                 # Interpretar la fertilidad
+                 #print 6
+                print("se mando a llamar la funcion interpretar fertility")
                 interpretation = interpretar_fertility(P_values)
                 print(interpretation)
                 messagebox.showinfo("Interpretación de la Fertilidad", interpretation)
