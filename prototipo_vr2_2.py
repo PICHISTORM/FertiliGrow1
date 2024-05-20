@@ -2,10 +2,10 @@ from tkinter import *
 from tkinter import messagebox, simpledialog, filedialog
 import tkinter as tk
 import matplotlib.pyplot as plt  # type: ignore
-from scipy.integrate import odeint # type: ignore
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk  # type: ignore
 import pandas as pd  # type: ignore
 import numpy as np  # type: ignore
+
 
 # Cantidad de errores
 errores = 0
@@ -34,6 +34,7 @@ def plot():
                 a2 = data['a2'][0]
                 a3 = data['a3'][0]
                 t_final = max(data['time'])
+
                 print(t_final)
                 dt = 0.1
                 n_steps = int(t_final / dt)
@@ -47,8 +48,10 @@ def plot():
                 print("se retorna Ddpdt")
 
                 # Condición inicial
-                P0 = data['P_i'][0]
+                P0 = 0
+
                 P_values = np.zeros(n_steps)
+               # n_steps= int(100)
                 P_values[0] = P0
                #print 3
                 print("se establecen los valores iniciales")
@@ -60,9 +63,9 @@ def plot():
                     print("se usa el metodo de euler")
 
                 # Graficar la solución
-                plt.plot(time, P_values, label='Fertility (P_i) over Time')
-                plt.xlabel('Time')
-                plt.ylabel('Fertility (P_i)')
+                plt.plot(time, P_values, label='Fertilidad (P_i) sobre tiempo')
+                plt.xlabel('Tiempo')
+                plt.ylabel('Fertililidad (Pi)')
                 plt.legend()
                 plt.show()
                     #print 5
@@ -131,12 +134,12 @@ lbl_A.place(x=5, y=40, width=100, height=30)
 
 # Label de las instrucciones
 texto_instrucciones = """
-Rellena los campos de las variables A, B, C, D y E 
+Rellena los campos de las variables
 con información sobre las propiedades de la tierra en la que se va a trabajar.
 Procura que tu archivo sea de tipo txt para evitar errores.
 A continuación se detalla el modo de uso:
 
-Paso 1. Rellena cada campo con un archivo de texto.
+Paso 1. Rellena el input con un archivo de texto.
 Paso 2. Aprieta el botón 'Cargar Modelo' para ver con más detalle la ecuación diferencial.
 
 Paso extra. Si quieres ver más sobre el programa, oprime 'MORE INFO'. 
