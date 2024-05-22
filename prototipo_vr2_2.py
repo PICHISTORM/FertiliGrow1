@@ -102,15 +102,36 @@ def interpretar_fertility(P_i_values):
 def miFuncion():
     global archivo_seleccionado
     global errores
-    archivo = filedialog.askopenfilename(filetypes=[("Archivos de texto", "*.txt")])
-    if archivo:
-        print("Archivo seleccionado:", archivo)
-        if not archivo.endswith(".txt"):
-            errores += 1  # Incrementamos la variable errores en 1
-            messagebox.showerror("Error", "Debes seleccionar un archivo de texto.")
-        else:
-            archivo_seleccionado = archivo
+    arreglo_numeros = []
+    try:
+        # Abrir el cuadro de diálogo para seleccionar el archivo
+        archivo = filedialog.askopenfile(filetypes=[("Archivos de texto", "*.txt")])
+        
+        if archivo:
+            print("Archivo seleccionado:", archivo.name)
+
+            lineas = archivo.readlines() #lee todas las lineas
+            # Cerrar el archivo después de leerlo
+            archivo.close()
+
+            for linea in lineas:
+                numero = int(linea.strip())  # Convertir la línea a entero
+                arreglo_numeros.append(numero)  # se pasa al arreglo
+            
             messagebox.showinfo("Éxito", "Archivo agregado correctamente.")
+            print(arreglo_numeros)
+            return arreglo_numeros
+            
+            
+        
+        
+        else:
+            messagebox.showerror("Error", "Debes seleccionar un archivo de texto.")
+            return None
+    
+    except Exception as e:
+        messagebox.showerror("Error", f"Error al leer el archivo: {e}")
+        return None
 
 # Muestra la cuenta de errores hasta el momento
 def miFuncion2():
@@ -130,10 +151,20 @@ textoinfo= """la ecuacion diferencial puede clasificarse de la siguiente manera:
 En resumen, la ecuación:
 es una ecuación diferencial ordinaria, de primer orden, no lineal """
 
+#TEXTO DE LAS MEDIDAS
+textoinfo2= """- pH // Unidades de pH
+- tasa de fotosíntesis //  µg/m3..---microgramos por metro cúbico 
+- difusión del CO2 // mol/m^2/s (moles por metro cuadrado por segundo)
+- calcio // mmol/L (milimoles por litro) o ppm (partes por millón)
+- fósforo // mmol/L (milimoles por litro) o ppm (partes por millón)
+- humedad del suelo // Medida como fracción de volumen o porcentaje """
+
 # Función que muestra más información
 def miFuncion3():
     messagebox.showinfo("ACERCA DE LA ECUACION", textoinfo)
 
+def miFuncion4():
+     messagebox.showinfo("UNIDADES DE MEDIDA", textoinfo2)
 
 
 
@@ -152,23 +183,55 @@ resized_image = image.resize(new_size, Image.LANCZOS)
 formula = ImageTk.PhotoImage(resized_image)
 #crear una etiqueta para posicionar la imagen y poder manipularla
 image_label = tk.Label(app, image=formula)
-image_label.place(x=250, y=295, width=300, height=63)
-
-
+image_label.place(x=270, y=295, width=300, height=63)
 
 
 app.configure(background="grey18")  # Color del fondo de la app
 app.iconbitmap("conciente.ico")
 app.title("¡PROTOTIPO 2.3!")  # Establecer el título de la app
 
+# Variable A
+lbl_A=Label(app,text="pH//Unidades de pH", fg="white",bg="green2")
+lbl_A.place(x=5,y=40,width=150,height=30)
 
+btnA = Button(app, text="Select File", command=miFuncion, fg="white", bg="black")
+btnA.place(x=5,y=70,width=150,height=30)
 
-# Variable datos
-btnA = Button(app, text="Select File", command=miFuncion, fg="red", bg="blue")
-btnA.place(x=5, y=70, width=100, height=30)
+#variable B
+lbl_B=Label(app,text="tasa de fotosíntesis//µg/m3",fg="white",bg="green2")
+lbl_B.place(x=5,y=120,width=150,height=30)
 
-lbl_A = Label(app, text="INPUT(DATOS.TXT)", fg="red")
-lbl_A.place(x=5, y=40, width=100, height=30)
+btnB = Button(app, text="Select File", command=miFuncion,fg="white", bg="black")
+btnB.place(x=5,y=150,width=150,height=30)
+
+#variable C
+
+lbl_C=Label(app,text="CO2//mol/m^2/s",fg="white",bg="green2")
+lbl_C.place(x=5,y=200,width=150,height=30)
+
+btnC = Button(app, text="Select File", command=miFuncion, fg="white", bg="black")
+btnC.place(x=5,y=230,width=150,height=30)
+
+#variable D
+lbl_D=Label(app,text="calcio//mmol/L",fg="white",bg="green2")
+lbl_D.place(x=5,y=280,width=150,height=30)
+
+btnD = Button(app, text="Select File", command=miFuncion, fg="white", bg="black")
+btnD.place(x=5,y=310,width=150,height=30)
+
+#variable E
+lbl_E=Label(app,text="fósforo//mmol/L", fg="white",bg="green2")
+lbl_E.place(x=5,y=360,width=150,height=30)
+
+btnE = Button(app, text="Select File", command=miFuncion,fg="white", bg="black")
+btnE.place(x=5,y=390,width=150,height=30)
+
+#Variable F
+lbl_F=Label(app,text="humedad//Porcentaje", fg="white",bg="green2")
+lbl_F.place(x=5,y=440,width=150,height=30)
+
+btnF = Button(app, text="Select File", command=miFuncion,fg="white", bg="black")
+btnF.place(x=5,y=470,width=150,height=30)
 
 # Label de las instrucciones
 texto_instrucciones = """
@@ -177,24 +240,31 @@ con información sobre las propiedades de la tierra en la que se va a trabajar.
 Procura que tu archivo sea de tipo txt para evitar errores.
 A continuación se detalla el modo de uso:
 
-Paso 1. Rellena el input con un archivo de texto.
-Paso 2. Aprieta el botón 'Cargar Modelo' para ver con más detalle la ecuación diferencial.
-
-Paso extra. Si quieres ver más sobre el programa, oprime 'MORE INFO'. 
+Paso 1. Rellena cada espacio vacio (input) con un archivo de texto.
+Paso 2. Al finalizar el llenado,aprieta el botón 'Cargar Modelo' 
+para ver con más detalle la ecuación diferencial.
+**Paso extra**. Si quieres ver más sobre el programa o la ec.dif, oprime 'MORE INFO'. 
 """
-lbl_inst = Label(app, text=texto_instrucciones, fg="red", bg="blue")
-lbl_inst.pack(pady=120)
+lbl_inst = Label(app, text=texto_instrucciones, fg="white", bg="green")
+lbl_inst.place(x=200,y=70)
 
 # Indicador de errores
 btnError = Button(app, text="Indicador de errores", command=miFuncion2, fg="white", bg="green")
-btnError.place(x=340, y=470, width=120, height=30)
+btnError.place(x=350, y=470, width=120, height=30)
 
 # Cargar modelo y graficar
 btnModel = Button(app, text="Cargar modelo", command=plot, fg="white", bg="orange")
-btnModel.place(x=340, y=500, width=120, height=30)
+btnModel.place(x=350, y=500, width=120, height=30)
 
 # Más información
-btnInfo = Button(app, text="MORE INFO", command=miFuncion3, fg="red", bg="white")
-btnInfo.place(x=700, y=10, width=120, height=30)
+btnInfo = Button(app, text="MORE INFO", command=miFuncion3, fg="red", bg="white",)
+btnInfo.place(x=700, y=5, width=120, height=30,)
+
+# MEDIDAS
+btnInfo = Button(app, text="MEDIDAS", command=miFuncion4, fg="red", bg="white",)
+btnInfo.place(x=5, y=520, width=150, height=30,)
+
+
+
 
 app.mainloop()  # Refresh de la app
