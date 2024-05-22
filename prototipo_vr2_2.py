@@ -75,13 +75,6 @@ def plot(month):
     return
 
 
-def interpretar_fertility(P_i_values):
-    if P_i_values[-1] > 10:
-        return "La fertilidad es alta."
-    elif P_i_values[-1] > 5:
-        return "La fertilidad es moderada."
-    else:
-        return "La fertilidad es baja."
     
 def imprimirhola():
  print("hola!OwO")
@@ -127,35 +120,35 @@ def ventana2():
     btn4.place(x=100,y=160,width=100,height=30)
 
      # MAYO
-    btn5 = Button(ventana_dos, text="[MAYO]", command= lambda: plot('mayo'), bg="dodger blue")
+    btn5 = Button(ventana_dos, text="[MAYO]", command= lambda: plot('mayo'),fg="white", bg="dodger blue")
     btn5.place(x=100,y=200,width=100,height=30)
 
      #JUNIO
-    btn6 = Button(ventana_dos, text="[JUNIO]", command= lambda: plot('junio'), bg="dodger blue")
+    btn6 = Button(ventana_dos, text="[JUNIO]", command= lambda: plot('junio'), fg="white",bg="dodger blue")
     btn6.place(x=100,y=240,width=100,height=30)
 
      #JULIO
-    btn7 = Button(ventana_dos, text="[JULIO]", command= lambda: plot('julio'), bg="dodger blue")
+    btn7 = Button(ventana_dos, text="[JULIO]", command= lambda: plot('julio'),fg="white", bg="dodger blue")
     btn7.place(x=100,y=280,width=100,height=30)
     
      #AGOSTO
-    btn8 = Button(ventana_dos, text="[AGOSTO]", command= lambda: plot('agosto'), bg="dodger blue")
+    btn8 = Button(ventana_dos, text="[AGOSTO]", command= lambda: plot('agosto'), fg="white",bg="dodger blue")
     btn8.place(x=100,y=320,width=100,height=30)
     
      #SEPTIEMBRE
-    btn9 = Button(ventana_dos, text="[SEPTIEMBRE]", command= lambda: plot('septiembre'), bg="dodger blue")
+    btn9 = Button(ventana_dos, text="[SEPTIEMBRE]", command= lambda: plot('septiembre'), fg="white",bg="dodger blue")
     btn9.place(x=100,y=360,width=100,height=30)
 
      #OCTUBRE
-    btn10 = Button(ventana_dos, text="[OCTUBRE]", command= lambda: plot('octubre'), bg="dodger blue")
+    btn10 = Button(ventana_dos, text="[OCTUBRE]", command= lambda: plot('octubre'),fg="white", bg="dodger blue")
     btn10.place(x=100,y=400,width=100,height=30)
 
     #NOVIEMBRE
-    btn11 = Button(ventana_dos, text="[NOVIEMBRE]", command= lambda: plot('noviembre'), bg="dodger blue")
+    btn11 = Button(ventana_dos, text="[NOVIEMBRE]", command= lambda: plot('noviembre'),fg="white", bg="dodger blue")
     btn11.place(x=100,y=440,width=100,height=30)
 
     #DICIEMBRE
-    btn12 = Button(ventana_dos, text="[DICIEMBRE]", command= lambda: plot('diciembre'), bg="dodger blue")
+    btn12 = Button(ventana_dos, text="[DICIEMBRE]", command= lambda: plot('diciembre'),fg="white", bg="dodger blue")
     btn12.place(x=100,y=480,width=100,height=30)
 
 
@@ -247,7 +240,7 @@ resized_image = image.resize(new_size, Image.LANCZOS)
 formula = ImageTk.PhotoImage(resized_image)
 #crear una etiqueta para posicionar la imagen y poder manipularla
 image_label = tk.Label(app, image=formula)
-image_label.place(x=270, y=295, width=300, height=63)
+image_label.place(x=270, y=345, width=300, height=63)
 
 
 app.configure(background="grey18")  # Color del fondo de la app
@@ -255,7 +248,7 @@ app.configure(background="grey18")  # Color del fondo de la app
 
 
 app.title("¡PROTOTIPO 2.3!")  # Establecer el título de la app
-
+app.iconbitmap("conciente.ico")
 #ph
 lbl_A=Label(app,text="pH//Unidades de pH", fg="white",bg="green2")
 lbl_A.place(x=5,y=40,width=150,height=30)
