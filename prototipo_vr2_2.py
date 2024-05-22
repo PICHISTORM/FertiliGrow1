@@ -3,7 +3,6 @@ from tkinter import messagebox, simpledialog, filedialog
 import tkinter as tk
 import matplotlib.pyplot as plt  
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk 
-import pandas as pd 
 import numpy as np  
 from PIL import Image, ImageTk
 import scipy as sp
@@ -41,15 +40,7 @@ monthDic = {
     'diciembre': 11
 }
 
-# Función para leer datos del archivo de texto
-def read_data(file_path):
-    try:
-        data = pd.read_csv(file_path)
-        print(data.columns)  # Para depuración
-        return data
-    except Exception as e:
-        messagebox.showerror("Error", f"No se pudo leer el archivo: {e}")
-        return pd.DataFrame()
+
 
 def plot(month):
     idx = monthDic[month]
