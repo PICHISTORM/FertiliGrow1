@@ -94,7 +94,76 @@ def interpretar_fertility(P_i_values):
     else:
         return "La fertilidad es baja."
     
-#quitar prueba
+def imprimirhola():
+ print("hola!OwO")
+    
+#funcion que abre una seg ventana al oprimir el boton cargar modelo xd
+def ventana2():
+    # Crear una nueva ventana usamos el (Toplevel)
+    ventana_dos = Toplevel()
+    ventana_dos.geometry("300x600")  # Dimensiones de la ventana
+    app.resizable(1, 1)  # Capacidad de ser reescalable
+    ventana_dos.title("***VISUALIZACION DEL MODELO***")
+   
+
+   
+
+    # Agregar un label en la segunda ventana
+    label = Label(ventana_dos, text="¡PANEL DE CONTROL!")
+    label.pack(pady=6)
+
+    # enero
+    btn1 = Button(ventana_dos, text="[ENERO]", command=imprimirhola, fg="white", bg="dodger blue")
+    btn1.place(x=100,y=40,width=100,height=30)
+
+     # febrero
+    btn2 = Button(ventana_dos, text="[FEBRERO]", command=imprimirhola, fg="white", bg="dodger blue")
+    btn2.place(x=100,y=80,width=100,height=30)
+
+     # MARZO
+    btn3 = Button(ventana_dos, text="[MARZO]", command=imprimirhola, fg="white", bg="dodger blue")
+    btn3.place(x=100,y=120,width=100,height=30)
+
+     # ABRIL
+    btn4 = Button(ventana_dos, text="[ABRIL]", command=imprimirhola, fg="white", bg="dodger blue")
+    btn4.place(x=100,y=160,width=100,height=30)
+
+     # MAYO
+    btn5 = Button(ventana_dos, text="[MAYO]", command=imprimirhola, fg="white", bg="dodger blue")
+    btn5.place(x=100,y=200,width=100,height=30)
+
+     #JUNIO
+    btn6 = Button(ventana_dos, text="[JUNIO]", command=imprimirhola, fg="white", bg="dodger blue")
+    btn6.place(x=100,y=240,width=100,height=30)
+
+     #JULIO
+    btn7 = Button(ventana_dos, text="[JULIO]", command=imprimirhola, fg="white", bg="dodger blue")
+    btn7.place(x=100,y=280,width=100,height=30)
+    
+     #AGOSTO
+    btn8 = Button(ventana_dos, text="[AGOSTO]", command=imprimirhola, fg="white", bg="dodger blue")
+    btn8.place(x=100,y=320,width=100,height=30)
+    
+     #SEPTIEMBRE
+    btn9 = Button(ventana_dos, text="[SEPTIEMBRE]", command=imprimirhola, fg="white", bg="dodger blue")
+    btn9.place(x=100,y=360,width=100,height=30)
+
+     #OCTUBRE
+    btn10 = Button(ventana_dos, text="[OCTUBRE]", command=imprimirhola, fg="white", bg="dodger blue")
+    btn10.place(x=100,y=400,width=100,height=30)
+
+    #NOVIEMBRE
+    btn11 = Button(ventana_dos, text="[NOVIEMBRE]", command=imprimirhola, fg="white", bg="dodger blue")
+    btn11.place(x=100,y=440,width=100,height=30)
+
+    #DICIEMBRE
+    btn12 = Button(ventana_dos, text="[DICIEMBRE]", command=imprimirhola, fg="white", bg="dodger blue")
+    btn12.place(x=100,y=480,width=100,height=30)
+
+
+    # BOTON QUE CIERRA LA VENTANA
+    cerrar_btn = Button(ventana_dos, text="Cerrar", command=ventana_dos.destroy)
+    cerrar_btn.place(x=100,y=520,width=100,height=30)
 
 # Función para seleccionar el archivo
 def miFuncion():
@@ -251,7 +320,7 @@ btnError = Button(app, text="Indicador de errores", command=miFuncion2, fg="whit
 btnError.place(x=350, y=470, width=120, height=30)
 
 # Cargar modelo y graficar
-btnModel = Button(app, text="Cargar modelo", command=plot, fg="white", bg="orange")
+btnModel = Button(app, text="Cargar modelo", command=ventana2, fg="white", bg="orange")
 btnModel.place(x=350, y=500, width=120, height=30)
 
 # Más información
