@@ -1,11 +1,11 @@
 from tkinter import *
 from tkinter import messagebox, simpledialog, filedialog
 import tkinter as tk
-import matplotlib.pyplot as plt  # type: ignore
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk  # type: ignore
-import pandas as pd  # type: ignore
-import numpy as np  # type: ignore
-import customtkinter as ctk # type: ignore
+import matplotlib.pyplot as plt  
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk 
+import pandas as pd 
+import numpy as np  
+import customtkinter as ctk 
 from random import choice
 from PIL import Image, ImageTk
 
@@ -143,7 +143,7 @@ app.geometry("800x800")  # Dimensiones de la ventana
 app.resizable(1, 1)  # Capacidad de ser reescalable
 
 #IMAGEN DE LA FORMULA
-image_path = r'C:\Users\USER\Desktop\python\formula.png'
+image_path = 'formula.png'
 image = Image.open(image_path)
 #tamaño de la imagen
 new_size = (300, 63)
