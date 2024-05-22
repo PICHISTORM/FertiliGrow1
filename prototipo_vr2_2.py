@@ -6,11 +6,40 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolb
 import pandas as pd 
 import numpy as np  
 from PIL import Image, ImageTk
+import scipy as sp
+from scipy.integrate import odeint
+from scipy.integrate import solve_ivp
 
 
 # Cantidad de errores
 errores = 0
 archivo_seleccionado = None  # Variable global para el archivo seleccionado
+
+
+dataDict = {
+    "ph" : [5.8,15,13.6,2.7,13.1,17.4,10.9,10.1,1.4,11,1.4,3.8],
+    "ft" : [10.6,10.4,3.6,12.9,15.3,8.9,5.9,14.6,7.4,3.6,17.4,14.8],
+    "co2" : [2.5,3.7,11.2,17,18.7,12.2,12.7,8.7,9.6,13.1,6.4,8.7],
+    "ca" : [2.4,1.5,4.8,8.1,5.4,4.8,1.4,3.6,7.6,6,7.1,3.3],
+    "fo" : [6.9,7,6,8.3,7.6,1.7,8.1,5.6,5.9,9.9,4.8,9],
+    "hum" : [3.5,5.52,6.71,5.51,11.51,9.83,6.46,7.7,2.99,5.18,5.22,2.72]
+
+}
+
+monthDic = {
+    'enero': 0,
+    'febrero': 1,
+    'marzo': 2,
+    'abril': 3,
+    'mayo': 4,
+    'junio': 5,
+    'julio': 6,
+    'agosto': 7,
+    'septiembre': 8,
+    'octubre': 9,
+    'noviembre': 10,
+    'diciembre': 11
+}
 
 # Función para leer datos del archivo de texto
 def read_data(file_path):
@@ -22,68 +51,28 @@ def read_data(file_path):
         messagebox.showerror("Error", f"No se pudo leer el archivo: {e}")
         return pd.DataFrame()
 
-def plot():
-    global archivo_seleccionado
-    if archivo_seleccionado:
-        data = read_data(archivo_seleccionado)
-        #print 1
-        print("el archivo fue detectado con exito")
-        if not data.empty:
-            if 'time' in data.columns and 'P_i' in data.columns and 'a1' in data.columns and 'a2' in data.columns and 'a3' in data.columns:
-                # Leer parámetros a1, a2, a3 y tiempo
-                a1 = data['a1'][0]
-                a2 = data['a2'][0]
-                a3 = data['a3'][0]
-                t_final = max(data['time'])
+def plot(month):
+    idx = monthDic[month]
+    a =  dataDict["fo"][idx] * dataDict["hum"][idx] 
+    b =  dataDict["ph"][idx] * 1/dataDict["co2"][idx]
+    c = 1/dataDict["ca"][idx] * 1/dataDict["fo"][idx]
+    def dvdt(t,v):
+        return a - b * v - c*v**2
+    
+    v0 = 0
+    t = np.linspace(0,1,100)
+    sol1 = odeint(dvdt, y0 = v0, t = t, tfirst = True)
+    sol2 = solve_ivp(dvdt, t_span = (0,max(t)), y0= [v0], t_eval = t)
 
-                print(t_final)
-                dt = 0.1
-                n_steps = int(t_final / dt)
-                time = np.linspace(0, t_final, n_steps)
-
-                # Definir la ecuación diferencial
-                def modelo(P, a1, a2, a3):
-                    dPdt = a1 - a2 * P - a3 * P**2
-                    return dPdt
-                #print 2
-                print("se retorna Ddpdt")
-
-                # Condición inicial
-                P0 = 0
-
-                P_values = np.zeros(n_steps)
-               # n_steps= int(100)
-                P_values[0] = P0
-               #print 3
-                print("se establecen los valores iniciales")
-            
-                # Resolver la ecuación diferencial usando el método de Euler
-                for i in range(1, n_steps):
-                    P_values[i] = P_values[i-1] + modelo(P_values[i-1], a1, a2, a3) * dt
-                  #print 4
-                    print("se usa el metodo de euler")
-
-                # Graficar la solución
-                plt.plot(time, P_values, label='Fertilidad (P_i) sobre tiempo')
-                plt.xlabel('Tiempo')
-                plt.ylabel('Fertililidad (Pi)')
-                plt.legend()
-                plt.show()
-                    #print 5
-                print("se grafico la solucion")
-                # Interpretar la fertilidad
-                 #print 6
-                print("se mando a llamar la funcion interpretar fertility")
-                interpretation = interpretar_fertility(P_values)
-                print(interpretation)
-                messagebox.showinfo("Interpretación de la Fertilidad", interpretation)
-            else:
-                messagebox.showerror("Error", "El archivo seleccionado no tiene las columnas necesarias ('time', 'P_i', 'a1', 'a2', 'a3').")
-        else:
-            messagebox.showerror("Error", "El archivo seleccionado no contiene datos.")
-    else:
-        messagebox.showerror("Error", "No se ha seleccionado ningún archivo.")
-
+    ySol1 = sol1.T[0]
+    ySol2 = sol2.y[0]
+    plt.title("Crecimiento de la fertilidad en "+month)
+    plt.plot(t,ySol1)
+    plt.plot(t,ySol2)
+    plt.ylabel('$P(t) / Fertilidad$', fontsize=22)
+    plt.xlabel('$t$', fontsize=22)
+    plt.show()
+    return
 
 
 def interpretar_fertility(P_i_values):
@@ -99,6 +88,15 @@ def imprimirhola():
     
 #funcion que abre una seg ventana al oprimir el boton cargar modelo xd
 def ventana2():
+    
+
+    #all data ready
+    for key in dataDict:
+        if(len(dataDict[key]) != 12):
+            messagebox.showerror("Error", "El formato de uno de los archivos es invalido. Deben ser 12 lineas *Una por mes*.")
+            return
+        
+    print(dataDict)
     # Crear una nueva ventana usamos el (Toplevel)
     ventana_dos = Toplevel()
     ventana_dos.geometry("300x600")  # Dimensiones de la ventana
@@ -113,51 +111,51 @@ def ventana2():
     label.pack(pady=6)
 
     # enero
-    btn1 = Button(ventana_dos, text="[ENERO]", command=imprimirhola, fg="white", bg="dodger blue")
+    btn1 = Button(ventana_dos, text="[ENERO]", command= lambda: plot('enero'), fg="white", bg="dodger blue")
     btn1.place(x=100,y=40,width=100,height=30)
 
      # febrero
-    btn2 = Button(ventana_dos, text="[FEBRERO]", command=imprimirhola, fg="white", bg="dodger blue")
+    btn2 = Button(ventana_dos, text="[FEBRERO]", command= lambda: plot('febrero'), fg="white", bg="dodger blue")
     btn2.place(x=100,y=80,width=100,height=30)
 
      # MARZO
-    btn3 = Button(ventana_dos, text="[MARZO]", command=imprimirhola, fg="white", bg="dodger blue")
+    btn3 = Button(ventana_dos, text="[MARZO]", command= lambda: plot('marzo'), fg="white", bg="dodger blue")
     btn3.place(x=100,y=120,width=100,height=30)
 
      # ABRIL
-    btn4 = Button(ventana_dos, text="[ABRIL]", command=imprimirhola, fg="white", bg="dodger blue")
+    btn4 = Button(ventana_dos, text="[ABRIL]", command= lambda: plot('abril'), fg="white", bg="dodger blue")
     btn4.place(x=100,y=160,width=100,height=30)
 
      # MAYO
-    btn5 = Button(ventana_dos, text="[MAYO]", command=imprimirhola, fg="white", bg="dodger blue")
+    btn5 = Button(ventana_dos, text="[MAYO]", command= lambda: plot('mayo'), bg="dodger blue")
     btn5.place(x=100,y=200,width=100,height=30)
 
      #JUNIO
-    btn6 = Button(ventana_dos, text="[JUNIO]", command=imprimirhola, fg="white", bg="dodger blue")
+    btn6 = Button(ventana_dos, text="[JUNIO]", command= lambda: plot('junio'), bg="dodger blue")
     btn6.place(x=100,y=240,width=100,height=30)
 
      #JULIO
-    btn7 = Button(ventana_dos, text="[JULIO]", command=imprimirhola, fg="white", bg="dodger blue")
+    btn7 = Button(ventana_dos, text="[JULIO]", command= lambda: plot('julio'), bg="dodger blue")
     btn7.place(x=100,y=280,width=100,height=30)
     
      #AGOSTO
-    btn8 = Button(ventana_dos, text="[AGOSTO]", command=imprimirhola, fg="white", bg="dodger blue")
+    btn8 = Button(ventana_dos, text="[AGOSTO]", command= lambda: plot('agosto'), bg="dodger blue")
     btn8.place(x=100,y=320,width=100,height=30)
     
      #SEPTIEMBRE
-    btn9 = Button(ventana_dos, text="[SEPTIEMBRE]", command=imprimirhola, fg="white", bg="dodger blue")
+    btn9 = Button(ventana_dos, text="[SEPTIEMBRE]", command= lambda: plot('septiembre'), bg="dodger blue")
     btn9.place(x=100,y=360,width=100,height=30)
 
      #OCTUBRE
-    btn10 = Button(ventana_dos, text="[OCTUBRE]", command=imprimirhola, fg="white", bg="dodger blue")
+    btn10 = Button(ventana_dos, text="[OCTUBRE]", command= lambda: plot('octubre'), bg="dodger blue")
     btn10.place(x=100,y=400,width=100,height=30)
 
     #NOVIEMBRE
-    btn11 = Button(ventana_dos, text="[NOVIEMBRE]", command=imprimirhola, fg="white", bg="dodger blue")
+    btn11 = Button(ventana_dos, text="[NOVIEMBRE]", command= lambda: plot('noviembre'), bg="dodger blue")
     btn11.place(x=100,y=440,width=100,height=30)
 
     #DICIEMBRE
-    btn12 = Button(ventana_dos, text="[DICIEMBRE]", command=imprimirhola, fg="white", bg="dodger blue")
+    btn12 = Button(ventana_dos, text="[DICIEMBRE]", command= lambda: plot('diciembre'), bg="dodger blue")
     btn12.place(x=100,y=480,width=100,height=30)
 
 
@@ -166,9 +164,10 @@ def ventana2():
     cerrar_btn.place(x=100,y=520,width=100,height=30)
 
 # Función para seleccionar el archivo
-def miFuncion():
+def readData(args):
     global archivo_seleccionado
     global errores
+    print(dataDict)
     arreglo_numeros = []
     try:
         # Abrir el cuadro de diálogo para seleccionar el archivo
@@ -182,16 +181,12 @@ def miFuncion():
             archivo.close()
 
             for linea in lineas:
-                numero = int(linea.strip())  # Convertir la línea a entero
+                numero = float(linea.strip())  # Convertir la línea a entero
                 arreglo_numeros.append(numero)  # se pasa al arreglo
             
             messagebox.showinfo("Éxito", "Archivo agregado correctamente.")
             print(arreglo_numeros)
-            return arreglo_numeros
-            
-            
-        
-        
+            dataDict[args] = arreglo_numeros
         else:
             messagebox.showerror("Error", "Debes seleccionar un archivo de texto.")
             return None
@@ -240,6 +235,8 @@ app = Tk()
 app.geometry("800x800")  # Dimensiones de la ventana
 app.resizable(1, 1)  # Capacidad de ser reescalable
 
+
+
 #IMAGEN DE LA FORMULA
 image_path = 'formula.png'
 image = Image.open(image_path)
@@ -254,50 +251,52 @@ image_label.place(x=270, y=295, width=300, height=63)
 
 
 app.configure(background="grey18")  # Color del fondo de la app
-app.iconbitmap("conciente.ico")
+
+
+
 app.title("¡PROTOTIPO 2.3!")  # Establecer el título de la app
 
-# Variable A
+#ph
 lbl_A=Label(app,text="pH//Unidades de pH", fg="white",bg="green2")
 lbl_A.place(x=5,y=40,width=150,height=30)
 
-btnA = Button(app, text="Select File", command=miFuncion, fg="white", bg="black")
+btnA = Button(app, text="Select File", command= lambda: readData('ph'), fg="white", bg="black")
 btnA.place(x=5,y=70,width=150,height=30)
 
-#variable B
+#ft
 lbl_B=Label(app,text="tasa de fotosíntesis//µg/m3",fg="white",bg="green2")
 lbl_B.place(x=5,y=120,width=150,height=30)
 
-btnB = Button(app, text="Select File", command=miFuncion,fg="white", bg="black")
+btnB = Button(app, text="Select File", command= lambda: readData('ft'),fg="white", bg="black")
 btnB.place(x=5,y=150,width=150,height=30)
 
-#variable C
+#co2
 
 lbl_C=Label(app,text="CO2//mol/m^2/s",fg="white",bg="green2")
 lbl_C.place(x=5,y=200,width=150,height=30)
 
-btnC = Button(app, text="Select File", command=miFuncion, fg="white", bg="black")
+btnC = Button(app, text="Select File", command= lambda: readData('co2'), fg="white", bg="black")
 btnC.place(x=5,y=230,width=150,height=30)
 
-#variable D
+#ca
 lbl_D=Label(app,text="calcio//mmol/L",fg="white",bg="green2")
 lbl_D.place(x=5,y=280,width=150,height=30)
 
-btnD = Button(app, text="Select File", command=miFuncion, fg="white", bg="black")
+btnD = Button(app, text="Select File", command= lambda: readData('ca'), fg="white", bg="black")
 btnD.place(x=5,y=310,width=150,height=30)
 
-#variable E
+#fo
 lbl_E=Label(app,text="fósforo//mmol/L", fg="white",bg="green2")
 lbl_E.place(x=5,y=360,width=150,height=30)
 
-btnE = Button(app, text="Select File", command=miFuncion,fg="white", bg="black")
+btnE = Button(app, text="Select File", command= lambda: readData('fo'),fg="white", bg="black")
 btnE.place(x=5,y=390,width=150,height=30)
 
-#Variable F
+#hum
 lbl_F=Label(app,text="humedad//Porcentaje", fg="white",bg="green2")
 lbl_F.place(x=5,y=440,width=150,height=30)
 
-btnF = Button(app, text="Select File", command=miFuncion,fg="white", bg="black")
+btnF = Button(app, text="Select File", command= lambda: readData('hum'),fg="white", bg="black")
 btnF.place(x=5,y=470,width=150,height=30)
 
 # Label de las instrucciones
@@ -311,6 +310,11 @@ Paso 1. Rellena cada espacio vacio (input) con un archivo de texto.
 Paso 2. Al finalizar el llenado,aprieta el botón 'Cargar Modelo' 
 para ver con más detalle la ecuación diferencial.
 **Paso extra**. Si quieres ver más sobre el programa o la ec.dif, oprime 'MORE INFO'. 
+
+Sobre los coeficientes de la ecuacion diferencial
+a1 = Depende del producto del fosforo y humedad
+a2 = Depende del ph y el inverso del Co2
+a3 = Depende del inverso del producto del calcio y el fosforo
 """
 lbl_inst = Label(app, text=texto_instrucciones, fg="white", bg="green")
 lbl_inst.place(x=200,y=70)
