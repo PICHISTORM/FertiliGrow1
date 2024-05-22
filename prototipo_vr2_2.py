@@ -5,6 +5,9 @@ import matplotlib.pyplot as plt  # type: ignore
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk  # type: ignore
 import pandas as pd  # type: ignore
 import numpy as np  # type: ignore
+import customtkinter as ctk # type: ignore
+from random import choice
+from PIL import Image, ImageTk
 
 
 # Cantidad de errores
@@ -83,6 +86,8 @@ def plot():
     else:
         messagebox.showerror("Error", "No se ha seleccionado ningún archivo.")
 
+
+
 def interpretar_fertility(P_i_values):
     if P_i_values[-1] > 10:
         return "La fertilidad es alta."
@@ -111,19 +116,52 @@ def miFuncion():
 def miFuncion2():
     messagebox.showerror("Cantidad de errores", "Errores: " + str(errores))
 
+textoinfo= """la ecuacion diferencial puede clasificarse de la siguiente manera:
+
+1. **Ecuación Diferencial Ordinaria (EDO)**:
+  - La ecuación involucra una sola variable dependiente \( P \) y una sola variable independiente \( t \). No hay derivadas parciales con respecto a más de una variable independiente, por lo que es una ecuación diferencial ordinaria.
+
+2. **Ecuación Diferencial de Primer Orden**:
+   - La más alta derivada que aparece en la ecuación es la primera derivada por lo que es una ecuación de primer orden.
+
+3. **Ecuación Diferencial No Lineal**:
+   - La ecuación es no lineal. Una ecuación diferencial es no lineal si la variable dependiente \( P \) o sus derivadas aparecen con potencias distintas de uno o en productos entre ellas.
+
+En resumen, la ecuación:
+es una ecuación diferencial ordinaria, de primer orden, no lineal """
+
 # Función que muestra más información
 def miFuncion3():
-    messagebox.showinfo("ACERCA DE", "Este programa fue creado con el propósito de encontrar aplicaciones prácticas de las ecuaciones diferenciales en la vida real.")
+    messagebox.showinfo("ACERCA DE LA ECUACION", textoinfo)
+
+
+
+
 
 app = Tk()
 app.geometry("800x800")  # Dimensiones de la ventana
 app.resizable(1, 1)  # Capacidad de ser reescalable
+
+#IMAGEN DE LA FORMULA
+image_path = r'C:\Users\USER\Desktop\python\formula.png'
+image = Image.open(image_path)
+#tamaño de la imagen
+new_size = (300, 63)
+resized_image = image.resize(new_size, Image.LANCZOS)
+#transformar para que tkinter pueda usarla
+formula = ImageTk.PhotoImage(resized_image)
+#crear una etiqueta para posicionar la imagen y poder manipularla
+image_label = tk.Label(app, image=formula)
+image_label.place(x=250, y=295, width=300, height=63)
+
+
+
+
 app.configure(background="grey18")  # Color del fondo de la app
 app.iconbitmap("conciente.ico")
 app.title("¡PROTOTIPO 2.3!")  # Establecer el título de la app
 
-lbl_titulo = Label(app, text="FertiliGrow", font=("comic sans", 26))
-lbl_titulo.pack()  # Etiqueta del título principal
+
 
 # Variable datos
 btnA = Button(app, text="Select File", command=miFuncion, fg="red", bg="blue")
@@ -149,11 +187,11 @@ lbl_inst.pack(pady=120)
 
 # Indicador de errores
 btnError = Button(app, text="Indicador de errores", command=miFuncion2, fg="white", bg="green")
-btnError.place(x=330, y=350, width=120, height=30)
+btnError.place(x=340, y=470, width=120, height=30)
 
 # Cargar modelo y graficar
 btnModel = Button(app, text="Cargar modelo", command=plot, fg="white", bg="orange")
-btnModel.place(x=330, y=380, width=120, height=30)
+btnModel.place(x=340, y=500, width=120, height=30)
 
 # Más información
 btnInfo = Button(app, text="MORE INFO", command=miFuncion3, fg="red", bg="white")
