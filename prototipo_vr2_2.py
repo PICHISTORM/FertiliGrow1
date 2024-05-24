@@ -51,7 +51,7 @@ def plot(month):
         return a - b * v - c*v**2
     
     v0 = 0
-    t = np.linspace(0,1,100)
+    t = np.linspace(0,6,100)
     sol1 = odeint(dvdt, y0 = v0, t = t, tfirst = True)
     sol2 = solve_ivp(dvdt, t_span = (0,max(t)), y0= [v0], t_eval = t)
 
@@ -67,8 +67,7 @@ def plot(month):
 
 
     
-def imprimirhola():
- print("hola!OwO")
+
     
 #funcion que abre una seg ventana al oprimir el boton cargar modelo xd
 def ventana2():
